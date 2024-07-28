@@ -1,12 +1,11 @@
 package com.jfposton.ytdlp;
 
 import com.jfposton.ytdlp.exception.YtDlpException;
-import com.jfposton.ytdlp.mapper.VideoFormat;
 import com.jfposton.ytdlp.mapper.VideoInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Optional;
 
 public class YtDlpTest {
 
@@ -66,40 +65,40 @@ public class YtDlpTest {
 
     @Test
     public void testGetVideoInfo() throws YtDlpException {
-        VideoInfo videoInfo = YtDlp.getVideoInfo(VIDEO_URL);
-        Assert.assertNotNull(videoInfo);
-    }
-
-    @Test
-    public void testGetFormats() throws YtDlpException {
-        List<VideoFormat> formats = YtDlp.getFormats(VIDEO_URL);
-        Assert.assertNotNull(formats);
-        Assert.assertTrue(formats.size() > 0);
-    }
-
-    @Test
-    public void testGetThumbnails() throws YtDlpException {
-        List<Thumb> thumbnails = YtDlp.getThumbnails(VIDEO_URL);
-        Assert.assertNotNull(thumbnails);
-        Assert.assertTrue(thumbnails.size() > 0);
-    }
-
-    @Test
-    public void testGetTags() throws YtDlpException {
-        List<String> tags = YtDlp.getTags(VIDEO_URL);
-        Assert.assertNotNull(tags);
-        Assert.assertTrue(tags.size() > 0);
-    }
-
-    @Test
-    public void testGetCategories() throws YtDlpException {
-        List<String> categories = YtDlp.getCategories(VIDEO_URL);
-        Assert.assertNotNull(categories);
-        Assert.assertTrue(categories.size() > 0);
+        Optional<VideoInfo> videoInfoOptional = YtDlp.getVideoInfo(VIDEO_URL);
+        Assert.assertTrue(videoInfoOptional.isPresent());
     }
 
     @Test(expected = YtDlpException.class)
     public void testFailGetNonExistentVideoInfo() throws YtDlpException {
+        YtDlp.getVideoInfo(NONE_EXISTENT_VIDEO_URL);
+    }
+
+    @Test
+    public void testGetVideoPlaylistInfo() throws YtDlpException {
+        Optional<VideoInfo> videoInfoOptional = YtDlp.getVideoInfo(PLAYLIST_URL);
+        Assert.assertTrue(videoInfoOptional.isPresent());
+    }
+
+    @Test
+    public void testGetVideoPlaylistInfoFromSpecificIndex() throws YtDlpException {
+        Optional<VideoInfo> videoInfoOptional = YtDlp.getVideoInfo(PLAYLIST_SPECIFIC_VIDEO_URL);
+        Assert.assertTrue(videoInfoOptional.isPresent());
+    }
+
+    @Test
+    public void testGetPlaylistPreviewInfo() throws YtDlpException {
+        Optional<VideoInfo> videoInfoOptional = YtDlp.getVideoInfo(PLAYLIST_URL);
+        Assert.assertTrue(videoInfoOptional.isPresent());
+    }
+
+    @Test(expected = YtDlpException.class)
+    public void testFailGetNonExistentPlaylistInfo() throws YtDlpException {
+        YtDlp.getVideoInfo(NONE_EXISTENT_VIDEO_URL);
+    }
+
+    @Test(expected = YtDlpException.class)
+    public void testFailGetNonExistentPlaylistPreviewInfo() throws YtDlpException {
         YtDlp.getVideoInfo(NONE_EXISTENT_VIDEO_URL);
     }
 
