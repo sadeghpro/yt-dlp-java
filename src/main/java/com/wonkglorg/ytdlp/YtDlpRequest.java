@@ -62,6 +62,10 @@ public class YtDlpRequest {
         return this;
     }
 
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
     /**
      * Constructor
      */
@@ -76,6 +80,7 @@ public class YtDlpRequest {
     public YtDlpRequest(String url) {
         this.url = url;
     }
+
 
     /**
      * Construct a request with a videoUrl and working directory

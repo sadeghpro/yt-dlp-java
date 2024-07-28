@@ -46,6 +46,7 @@ public class YtDlp {
         return String.format("%s %s", executablePath, command);
     }
 
+
     /**
      * Execute yt-dlp request
      *
@@ -116,7 +117,7 @@ public class YtDlp {
 
         int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
 
-        ytDlpResponse = new YtDlpResponse(command, options, directory, exitCode, elapsedTime, out, err);
+        ytDlpResponse = new YtDlpResponse(String.join(" ", command), options, directory, exitCode, elapsedTime, out, err);
 
         return ytDlpResponse;
     }
@@ -132,6 +133,9 @@ public class YtDlp {
         return YtDlp.execute(request).getOut();
     }
 
+    /**
+     * Helper method to download media
+     */
     private static Map<String, VideoInfo> download(String videoUrl, String fileName, String format, YtDlpRequest request) {
         Optional<VideoInfo> videoInfoOptional = Optional.empty();
         try {
@@ -154,7 +158,7 @@ public class YtDlp {
     }
 
     /**
-     * Download a video from a URL
+     * Download a video from a URL with full metadata
      *
      * @param videoUrl The video url
      * @param path     The path to save the video
@@ -166,7 +170,7 @@ public class YtDlp {
     }
 
     /**
-     * Download a video from a URL
+     * Download a video from a URL with full metadata user
      *
      * @param videoUrl The video url
      * @param path     The path to save the video
@@ -177,10 +181,26 @@ public class YtDlp {
         return downloadVideo(videoUrl, path, "%(title)s");
     }
 
+    /**
+     * Downloads audio from a URL with full metadata user
+     *
+     * @param videoUrl The video url
+     * @param path     The path to save the video
+     * @return A Map of the saved file and the video info related to it
+     * @throws YtDlpException If the video cannot be downloaded
+     */
     public static Map<String, VideoInfo> downloadAudio(String videoUrl, String path, String fileName) {
         return download(videoUrl, fileName, "mp3", new YtDlpRequest(videoUrl).setOption("--extract-audio").setOption("--audio-format", "mp3").setOption("--output", path + "\\" + fileName + ".mp3"));
     }
 
+    /**
+     * Downloads audio from a URL with full metadata user
+     *
+     * @param videoUrl The video url
+     * @param path     The path to save the video
+     * @return A Map of the saved file and the video info related to it
+     * @throws YtDlpException If the video cannot be downloaded
+     */
     public static Map<String, VideoInfo> downloadAudio(String videoUrl, String path) {
         return downloadAudio(videoUrl, path, "%(title)s");
     }
@@ -190,8 +210,6 @@ public class YtDlp {
      * Helper method to download videos with preview info
      */
     private static Map<String, VideoPreviewInfo> downloadPreview(String path, VideoPreviewInfo videoPreviewInfo, YtDlpRequest request) {
-        request.setOption("--output", path + "/%(title)s" + ".mp4");
-        request.setOption("--format", "bestvideo+bestaudio/best");
         try {
             YtDlp.execute(request);
         } catch (YtDlpException e) {
@@ -203,7 +221,7 @@ public class YtDlp {
     }
 
     /**
-     * Download a video preview from a URL
+     * Download a video from a URL with full metadata user {@link #downloadVideo(String, String, String)} for a faster download but with less available metadata
      *
      * @param videoUrl         The video url
      * @param path             The path to save the video
@@ -211,11 +229,11 @@ public class YtDlp {
      * @return A Map of the saved file and the video preview info related to it
      */
     private static Map<String, VideoPreviewInfo> downloadVideoPreview(String videoUrl, String path, VideoPreviewInfo videoPreviewInfo) {
-        return downloadPreview(path, videoPreviewInfo, new YtDlpRequest(videoUrl).setOption("--output", path + "/%(title)s" + ".mp4").setOption("--format", "bestvideo+bestaudio/best"));
+        return downloadPreview(path, videoPreviewInfo, new YtDlpRequest(videoUrl).setOption("--output", path + "/%(title)s.mp4").setOption("--format", "bestvideo+bestaudio/best"));
     }
 
     /**
-     * Download an audio preview from a URL
+     * Download a video from a URL with full metadata user {@link #downloadVideo(String, String, String)} for a faster download but with less available metadata
      *
      * @param videoUrl         The video url
      * @param path             The path to save the audio
@@ -223,7 +241,7 @@ public class YtDlp {
      * @return A Map of the saved file and the video preview info related to it
      */
     private static Map<String, VideoPreviewInfo> downloadAudioPreview(String videoUrl, String path, VideoPreviewInfo videoPreviewInfo) {
-        return downloadPreview(path, videoPreviewInfo, new YtDlpRequest(videoUrl).setOption("--extract-audio").setOption("--audio-format", "mp3").setOption("--output", path + "/%(title)s" + ".mp3"));
+        return downloadPreview(videoUrl, videoPreviewInfo, new YtDlpRequest(videoUrl).setOption("--extract-audio").setOption("--audio-format", "mp3").setOption("--output", path + "/%(title)s.mp3"));
     }
 
 
@@ -241,40 +259,13 @@ public class YtDlp {
 
         if (subDirectoryPlaylist) path = path + "/" + playlistInfo.getTitle();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        List<Future<Map<String, VideoPreviewInfo>>> futures = new ArrayList<>();
-
+        List<Callable<Map<String, VideoPreviewInfo>>> tasks = new ArrayList<>();
         for (VideoPreviewInfo videoInfo : videoInfos) {
             String finalPath = path;
-            Callable<Map<String, VideoPreviewInfo>> task = () -> downloader.apply(videoInfo.getUrl(), finalPath, videoInfo);
-            Future<Map<String, VideoPreviewInfo>> future = executorService.submit(task);
-            futures.add(future);
+            tasks.add(() -> downloader.apply(videoInfo.getUrl(), finalPath, videoInfo));
         }
 
-        Map<String, VideoPreviewInfo> downloadedVideos = new HashMap<>();
-        for (Future<Map<String, VideoPreviewInfo>> future : futures) {
-            try {
-                Map<String, VideoPreviewInfo> result = future.get();
-                downloadedVideos.putAll(result);
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                    System.err.println("Executor service did not terminate");
-                }
-            }
-        } catch (InterruptedException ex) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
-        return downloadedVideos;
+        return executeTasks(tasks);
     }
 
     /**
@@ -323,42 +314,14 @@ public class YtDlp {
 
         if (subDirectoryPlaylist) path = path + "/" + playlistInfo.getTitle();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        List<Future<Map<String, VideoInfo>>> futures = new ArrayList<>();
-
+        List<Callable<Map<String, VideoInfo>>> tasks = new ArrayList<>();
         System.out.println("Downloading " + videoInfos.size() + " videos");
         for (VideoInfo videoInfo : videoInfos) {
             String finalPath = path;
-            Callable<Map<String, VideoInfo>> task = () -> downloader.apply(videoInfo.getOriginalUrl(), finalPath);
-            Future<Map<String, VideoInfo>> future = executorService.submit(task);
-            futures.add(future);
+            tasks.add(() -> downloader.apply(videoInfo.getOriginalUrl(), finalPath));
         }
 
-        Map<String, VideoInfo> downloadedVideos = new HashMap<>();
-        for (Future<Map<String, VideoInfo>> future : futures) {
-            try {
-                Map<String, VideoInfo> result = future.get();
-                downloadedVideos.putAll(result);
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                    System.err.println("Executor service did not terminate");
-                }
-            }
-        } catch (InterruptedException ex) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
-        return downloadedVideos;
+        return executeTasks(tasks);
     }
 
     public static Map<String, VideoInfo> downloadPlaylistVideo(String playlistUrl, String path, boolean subDirectoryPlaylist) {
@@ -587,4 +550,38 @@ public class YtDlp {
     public static void setExecutablePath(String path) {
         executablePath = path;
     }
+
+    private static <T> Map<String, T> executeTasks(List<Callable<Map<String, T>>> tasks) throws YtDlpException {
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<Map<String, T>>> futures = new ArrayList<>();
+
+        for (Callable<Map<String, T>> task : tasks) {
+            futures.add(executorService.submit(task));
+        }
+
+        Map<String, T> results = new HashMap<>();
+        for (Future<Map<String, T>> future : futures) {
+            try {
+                results.putAll(future.get());
+            } catch (InterruptedException | ExecutionException e) {
+                throw new YtDlpException(e);
+            }
+        }
+
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                    System.err.println("Executor service did not terminate");
+                }
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        return results;
+    }
+
 }
