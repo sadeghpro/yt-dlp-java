@@ -1,149 +1,473 @@
 package com.jfposton.ytdlp.mapper;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VideoInfo {
+    @JsonProperty("id")
+    private String id;
+    @JsonProperty("title")
+    private String title;
+    @JsonProperty("formats")
+    private List<VideoFormat> formats;
+    @JsonProperty("thumbnails")
+    private List<VideoThumbnail> thumbnails;
+    @JsonProperty("thumbnail")
+    private String thumbnail;
+    @JsonProperty("description")
+    private String description;
+    @JsonProperty("channel_id")
+    private String channelId;
+    @JsonProperty("channel_url")
+    private String channelUrl;
+    @JsonProperty("duration")
+    private int duration;
+    @JsonProperty("view_count")
+    private long viewCount;
+    @JsonProperty("average_rating")
+    private String averageRating;
+    @JsonProperty("age_limit")
+    private int ageLimit;
+    @JsonProperty("webpage_url")
+    private String webpageUrl;
+    @JsonProperty("categories")
+    private List<String> categories;
+    @JsonProperty("tags")
+    private List<String> tags;
+    @JsonProperty("playable_in_embed")
+    private boolean playableInEmbed;
+    @JsonProperty("live_status")
+    private String liveStatus;
+    @JsonProperty("release_timestamp")
+    private long releaseTimestamp;
+    @JsonProperty("_format_sort_fields")
+    private List<String> formatSortFields;
+    @JsonProperty("automatic_captions")
+    private AutomaticCaptions automaticCaptions;
+    @JsonProperty("subtitles")
+    private Subtitles subtitles;
+    @JsonProperty("comment_count")
+    private long commentCount;
+    @JsonProperty("chapters")
+    private Object chapters;  // Assuming chapters can be null, Object type can be adjusted
+    @JsonProperty("heatmap")
+    private List<HeatmapData> heatmap;
+    @JsonProperty("like_count")
+    private long likeCount;
+    @JsonProperty("channel")
+    private String channel;
+    @JsonProperty("channel_follower_count")
+    private long channelFollowerCount;
+    @JsonProperty("channel_is_verified")
+    private boolean channelIsVerified;
+    @JsonProperty("uploader")
+    private String uploader;
+    @JsonProperty("uploader_id")
+    private String uploaderId;
+    @JsonProperty("uploader_url")
+    private String uploaderUrl;
+    @JsonProperty("upload_date")
+    private String uploadDate;
+    @JsonProperty("timestamp")
+    private long timestamp;
+    @JsonProperty("availability")
+    private String availability;
+    @JsonProperty("original_url")
+    private String originalUrl;
+    @JsonProperty("webpage_url_basename")
+    private String webpageUrlBasename;
+    @JsonProperty("webpage_url_domain")
+    private String webpageUrlDomain;
+    @JsonProperty("extractor")
+    private String extractor;
+    @JsonProperty("extractor_key")
+    private String extractorKey;
+    @JsonProperty("playlist")
+    private String playlist;
+    @JsonProperty("playlist_index")
+    private Object playlistIndex;  // Assuming playlistIndex can be null, Object type can be adjusted
+    @JsonProperty("display_id")
+    private String displayId;
+    @JsonProperty("fulltitle")
+    private String fullTitle;
+    @JsonProperty("duration_string")
+    private String durationString;
+    @JsonProperty("release_date")
+    private String releaseDate;
+    @JsonProperty("release_year")
+    private int releaseYear;
+    @JsonProperty("is_live")
+    private boolean isLive;
+    @JsonProperty("was_live")
+    private boolean wasLive;
+    @JsonProperty("requested_subtitles")
+    private Object requestedSubtitles;  // Assuming requestedSubtitles can be null, Object type can be adjusted
+    @JsonProperty("_has_drm")
+    private Object hasDrm;  // Assuming hasDrm can be null, Object type can be adjusted
+    @JsonProperty("epoch")
+    private long epoch;
+    @JsonProperty("requested_formats")
+    private List<RequestedFormat> requestedFormats;
+    @JsonProperty("format")
+    private String format;
+    @JsonProperty("format_id")
+    private String formatId;
+    @JsonProperty("ext")
+    private String ext;
+    @JsonProperty("protocol")
+    private String protocol;
+    @JsonProperty("language")
+    private String language;
+    @JsonProperty("format_note")
+    private String formatNote;
+    @JsonProperty("filesize_approx")
+    private long filesizeApprox;
+    @JsonProperty("tbr")
+    private double tbr;
+    @JsonProperty("width")
+    private int width;
+    @JsonProperty("height")
+    private int height;
+    @JsonProperty("resolution")
+    private String resolution;
+    @JsonProperty("fps")
+    private double fps;
+    @JsonProperty("dynamic_range")
+    private String dynamicRange;
+    @JsonProperty("vcodec")
+    private String vcodec;
+    @JsonProperty("vbr")
+    private double vbr;
+    @JsonProperty("stretched_ratio")
+    private Object stretchedRatio;  // Assuming stretchedRatio can be null, Object type can be adjusted
+    @JsonProperty("aspect_ratio")
+    private double aspectRatio;
+    @JsonProperty("acodec")
+    private String acodec;
+    @JsonProperty("abr")
+    private double abr;
+    @JsonProperty("asr")
+    private int asr;
+    @JsonProperty("audio_channels")
+    private int audioChannels;
+    @JsonProperty("_filename")
+    private String filename;
+    @JsonProperty("filename")
+    private String fileName;
+    @JsonProperty("_type")
+    private String type;
+    @JsonProperty("_version")
+    private Version version;
 
-  private String id;
-  private String fulltitle;
-  private String title;
 
-  @JsonProperty("upload_date")
-  private String uploadDate;
+    public String getId() {
+        return id;
+    }
 
-  @JsonProperty("display_id")
-  private String displayId;
+    public String getTitle() {
+        return title;
+    }
 
-  private long duration;
-  private String description;
-  private String thumbnail;
-  private String license;
+    public List<VideoFormat> getFormats() {
+        return formats;
+    }
 
-  @JsonProperty("uploader_id")
-  private String uploaderId;
+    public List<VideoThumbnail> getThumbnails() {
+        return thumbnails;
+    }
 
-  private String uploader;
+    public String getThumbnail() {
+        return thumbnail;
+    }
 
-  @JsonProperty("player_url")
-  private String playerUrl;
+    public String getDescription() {
+        return description;
+    }
 
-  @JsonProperty("webpage_url")
-  private String webpageUrl;
+    public String getChannelId() {
+        return channelId;
+    }
 
-  @JsonProperty("webpage_url_basename")
-  private String webpageUrlBasename;
+    public String getChannelUrl() {
+        return channelUrl;
+    }
 
-  private String resolution;
-  private int width;
-  private int height;
-  private String format;
-  private String ext;
+    public int getDuration() {
+        return duration;
+    }
 
-  @JsonProperty("http_headers")
-  private HttpHeader httpHeader;
+    public long getViewCount() {
+        return viewCount;
+    }
 
-  private List<String> categories;
-  private List<String> tags;
-  private List<VideoFormat> formats;
-  private List<VideoThumbnail> thumbnails;
+    public String getAverageRating() {
+        return averageRating;
+    }
 
-  public String getId() {
-    return id;
-  }
+    public int getAgeLimit() {
+        return ageLimit;
+    }
 
-  public String getFulltitle() {
-    return fulltitle;
-  }
+    public String getWebpageUrl() {
+        return webpageUrl;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public List<String> getCategories() {
+        return categories;
+    }
 
-  public String getUploadDate() {
-    return uploadDate;
-  }
+    public List<String> getTags() {
+        return tags;
+    }
 
-  public String getDisplayId() {
-    return displayId;
-  }
+    public boolean isPlayableInEmbed() {
+        return playableInEmbed;
+    }
 
-  public long getDuration() {
-    return duration;
-  }
+    public String getLiveStatus() {
+        return liveStatus;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public long getReleaseTimestamp() {
+        return releaseTimestamp;
+    }
 
-  public String getThumbnail() {
-    return thumbnail;
-  }
+    public List<String> getFormatSortFields() {
+        return formatSortFields;
+    }
 
-  public String getLicense() {
-    return license;
-  }
+    public AutomaticCaptions getAutomaticCaptions() {
+        return automaticCaptions;
+    }
 
-  public String getUploaderId() {
-    return uploaderId;
-  }
+    public Subtitles getSubtitles() {
+        return subtitles;
+    }
 
-  public String getUploader() {
-    return uploader;
-  }
+    public long getCommentCount() {
+        return commentCount;
+    }
 
-  public String getPlayerUrl() {
-    return playerUrl;
-  }
+    public Object getChapters() {
+        return chapters;
+    }
 
-  public String getWebpageUrl() {
-    return webpageUrl;
-  }
+    public List<HeatmapData> getHeatmap() {
+        return heatmap;
+    }
 
-  public String getWebpageUrlBasename() {
-    return webpageUrlBasename;
-  }
+    public long getLikeCount() {
+        return likeCount;
+    }
 
-  public String getResolution() {
-    return resolution;
-  }
+    public String getChannel() {
+        return channel;
+    }
 
-  public int getWidth() {
-    return width;
-  }
+    public long getChannelFollowerCount() {
+        return channelFollowerCount;
+    }
 
-  public int getHeight() {
-    return height;
-  }
+    public boolean isChannelIsVerified() {
+        return channelIsVerified;
+    }
 
-  public String getFormat() {
-    return format;
-  }
+    public String getUploader() {
+        return uploader;
+    }
 
-  public String getExt() {
-    return ext;
-  }
+    public String getUploaderId() {
+        return uploaderId;
+    }
 
-  public HttpHeader getHttpHeader() {
-    return httpHeader;
-  }
+    public String getUploaderUrl() {
+        return uploaderUrl;
+    }
 
-  public List<String> getCategories() {
-    return categories;
-  }
+    public String getUploadDate() {
+        return uploadDate;
+    }
 
-  public List<String> getTags() {
-    return tags;
-  }
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-  public List<VideoFormat> getFormats() {
-    return formats;
-  }
+    public String getAvailability() {
+        return availability;
+    }
 
-  public List<VideoThumbnail> getThumbnails() {
-    return thumbnails;
-  }
+    public String getOriginalUrl() {
+        return originalUrl;
+    }
+
+    public String getWebpageUrlBasename() {
+        return webpageUrlBasename;
+    }
+
+    public String getWebpageUrlDomain() {
+        return webpageUrlDomain;
+    }
+
+    public String getExtractor() {
+        return extractor;
+    }
+
+    public String getExtractorKey() {
+        return extractorKey;
+    }
+
+    public String getPlaylist() {
+        return playlist;
+    }
+
+    public Object getPlaylistIndex() {
+        return playlistIndex;
+    }
+
+    public String getDisplayId() {
+        return displayId;
+    }
+
+    public String getFullTitle() {
+        return fullTitle;
+    }
+
+    public String getDurationString() {
+        return durationString;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public boolean isLive() {
+        return isLive;
+    }
+
+    public boolean isWasLive() {
+        return wasLive;
+    }
+
+    public Object getRequestedSubtitles() {
+        return requestedSubtitles;
+    }
+
+    public Object getHasDrm() {
+        return hasDrm;
+    }
+
+    public long getEpoch() {
+        return epoch;
+    }
+
+    public List<RequestedFormat> getRequestedFormats() {
+        return requestedFormats;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public String getFormatId() {
+        return formatId;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getFormatNote() {
+        return formatNote;
+    }
+
+    public long getFilesizeApprox() {
+        return filesizeApprox;
+    }
+
+    public double getTbr() {
+        return tbr;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public double getFps() {
+        return fps;
+    }
+
+    public String getDynamicRange() {
+        return dynamicRange;
+    }
+
+    public String getVcodec() {
+        return vcodec;
+    }
+
+    public double getVbr() {
+        return vbr;
+    }
+
+    public Object getStretchedRatio() {
+        return stretchedRatio;
+    }
+
+    public double getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public String getAcodec() {
+        return acodec;
+    }
+
+    public double getAbr() {
+        return abr;
+    }
+
+    public int getAsr() {
+        return asr;
+    }
+
+    public int getAudioChannels() {
+        return audioChannels;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
 }
