@@ -16,9 +16,6 @@ public class Subtitles {
         return automaticCaptions;
     }
 
-    public void setAutomaticCaptions(Map<String, List<Subtitle>> automaticCaptions) {
-        this.automaticCaptions = automaticCaptions;
-    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Subtitle {
@@ -39,33 +36,34 @@ public class Subtitles {
             return url;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
         public String getVideo_id() {
             return video_id;
-        }
-
-        public void setVideo_id(String video_id) {
-            this.video_id = video_id;
         }
 
         public String getExt() {
             return ext;
         }
 
-        public void setExt(String ext) {
-            this.ext = ext;
-        }
-
         public String getProtocol() {
             return protocol;
         }
 
-        public void setProtocol(String protocol) {
-            this.protocol = protocol;
+        @Override
+        public String toString() {
+            return "Subtitle{" +
+                    "url='" + url + '\'' +
+                    ", video_id='" + video_id + '\'' +
+                    ", ext='" + ext + '\'' +
+                    ", protocol='" + protocol + '\'' +
+                    '}';
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Subtitles{" +
+                "automaticCaptions=" + automaticCaptions +
+                '}';
     }
 }
 

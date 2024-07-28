@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jfposton.ytdlp.exception.YtDlpException;
 import com.jfposton.ytdlp.mapper.PlaylistInfo;
 import com.jfposton.ytdlp.mapper.VideoInfo;
-import com.jfposton.ytdlp.mapper.video.PlaylistPreviewInfo;
+import com.jfposton.ytdlp.mapper.PlaylistPreviewInfo;
 import com.jfposton.ytdlp.utils.StreamGobbler;
 import com.jfposton.ytdlp.utils.StreamProcessExtractor;
 

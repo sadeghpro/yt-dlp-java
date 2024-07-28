@@ -2,7 +2,6 @@ package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jfposton.ytdlp.mapper.video.PlaylistData;
 
 import java.util.List;
 
@@ -19,5 +18,39 @@ public class PlaylistInfo extends PlaylistData {
 
     public void setEntries(List<VideoInfo> entries) {
         this.entries = entries;
+    }
+
+    @Override
+    public String toString() {
+        return "PlaylistInfo{" +
+                "entries=" + entries +
+                ", id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", availability='" + availability + '\'' +
+                ", channelFollowerCount=" + channelFollowerCount +
+                ", description='" + description + '\'' +
+                ", tags=" + tags +
+                ", thumbnails=" + thumbnails +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                ", viewCount=" + viewCount +
+                ", playlistCount=" + playlistCount +
+                ", channel='" + channel + '\'' +
+                ", channelId='" + channelId + '\'' +
+                ", uploaderId='" + uploaderId + '\'' +
+                ", uploader='" + uploader + '\'' +
+                ", channelUrl='" + channelUrl + '\'' +
+                ", uploaderUrl='" + uploaderUrl + '\'' +
+                ", type='" + type + '\'' +
+                ", extractorKey='" + extractorKey + '\'' +
+                ", extractor='" + extractor + '\'' +
+                ", webpageUrl='" + webpageUrl + '\'' +
+                ", originalUrl='" + originalUrl + '\'' +
+                ", webpageUrlBasename='" + webpageUrlBasename + '\'' +
+                ", webpageUrlDomain='" + webpageUrlDomain + '\'' +
+                ", releaseYear=" + releaseYear +
+                ", epoch=" + epoch +
+                ", filesToMove=" + filesToMove +
+                ", version=" + version +
+                '}';
     }
 }

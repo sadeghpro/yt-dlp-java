@@ -2,7 +2,6 @@ package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jfposton.ytdlp.mapper.video.Fragment;
 
 import java.util.List;
 import java.util.Map;
@@ -78,4 +77,126 @@ public class VideoFormat {
 
     @JsonProperty("format")
     private String format;
+
+
+    public String getFormatId() {
+        return formatId;
+    }
+
+    public String getFormatNote() {
+        return formatNote;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public String getAcodec() {
+        return acodec;
+    }
+
+    public String getVcodec() {
+        return vcodec;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public Double getFps() {
+        return fps;
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public Integer getColumns() {
+        return columns;
+    }
+
+    public List<Fragment> getFragments() {
+        return fragments;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public Double getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public Integer getFilesizeApprox() {
+        return filesizeApprox;
+    }
+
+    public Map<String, String> getHttpHeaders() {
+        return httpHeaders;
+    }
+
+    public String getAudioExt() {
+        return audioExt;
+    }
+
+    public String getVideoExt() {
+        return videoExt;
+    }
+
+    public Integer getVbr() {
+        return vbr;
+    }
+
+    public Integer getAbr() {
+        return abr;
+    }
+
+    public Integer getTbr() {
+        return tbr;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
+    public String toString() {
+        return "VideoFormat{" +
+                "formatId='" + formatId + '\'' +
+                ", formatNote='" + formatNote + '\'' +
+                ", ext='" + ext + '\'' +
+                ", protocol='" + protocol + '\'' +
+                ", acodec='" + acodec + '\'' +
+                ", vcodec='" + vcodec + '\'' +
+                ", url='" + url + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", fps=" + fps +
+                ", rows=" + rows +
+                ", columns=" + columns +
+                ", fragments=" + fragments +
+                ", resolution='" + resolution + '\'' +
+                ", aspectRatio=" + aspectRatio +
+                ", filesizeApprox=" + filesizeApprox +
+                ", httpHeaders=" + httpHeaders +
+                ", audioExt='" + audioExt + '\'' +
+                ", videoExt='" + videoExt + '\'' +
+                ", vbr=" + vbr +
+                ", abr=" + abr +
+                ", tbr=" + tbr +
+                ", format='" + format + '\'' +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package com.jfposton.ytdlp.mapper.video;
+package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

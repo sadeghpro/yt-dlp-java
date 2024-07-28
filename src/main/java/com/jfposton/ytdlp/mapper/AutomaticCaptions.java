@@ -16,10 +16,6 @@ public class AutomaticCaptions {
         return automaticCaptions;
     }
 
-    public void setAutomaticCaptions(Map<String, List<Caption>> automaticCaptions) {
-        this.automaticCaptions = automaticCaptions;
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Caption {
 
@@ -36,25 +32,23 @@ public class AutomaticCaptions {
             return ext;
         }
 
-        public void setExt(String ext) {
-            this.ext = ext;
-        }
-
         public String getUrl() {
             return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
         }
 
         public String getName() {
             return name;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        @Override
+        public String toString() {
+            return "Caption{" + "ext='" + ext + '\'' + ", url='" + url + '\'' + ", name='" + name + '\'' + '}';
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AutomaticCaptions{" + "automaticCaptions=" + automaticCaptions + '}';
     }
 }
 

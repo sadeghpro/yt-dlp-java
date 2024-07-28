@@ -3,6 +3,8 @@ package com.jfposton.ytdlp.mapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.net.http.HttpHeaders;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestedFormat {
     @JsonProperty("format_id")
@@ -58,15 +60,140 @@ public class RequestedFormat {
     @JsonProperty("format")
     private String format;
 
-    public static class HttpHeaders {
-        @JsonProperty("User-Agent")
-        private String userAgent;
-        @JsonProperty("Accept")
-        private String accept;
-        @JsonProperty("Accept-Language")
-        private String acceptLanguage;
-        @JsonProperty("Sec-Fetch-Mode")
-        private String secFetchMode;
 
+    public String getFormatId() {
+        return formatId;
+    }
+
+    public Object getFormatIndex() {
+        return formatIndex;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getManifestUrl() {
+        return manifestUrl;
+    }
+
+    public double getTbr() {
+        return tbr;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public Double getFps() {
+        return fps;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public Object getPreference() {
+        return preference;
+    }
+
+    public int getQuality() {
+        return quality;
+    }
+
+    public boolean isHasDrm() {
+        return hasDrm;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public String getVcodec() {
+        return vcodec;
+    }
+
+    public String getAcodec() {
+        return acodec;
+    }
+
+    public String getDynamicRange() {
+        return dynamicRange;
+    }
+
+    public int getSourcePreference() {
+        return sourcePreference;
+    }
+
+    public String getFormatNote() {
+        return formatNote;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public Double getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
+    }
+
+    public String getVideoExt() {
+        return videoExt;
+    }
+
+    public String getAudioExt() {
+        return audioExt;
+    }
+
+    public double getAbr() {
+        return abr;
+    }
+
+    public double getVbr() {
+        return vbr;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestedFormat{" +
+                "formatId='" + formatId + '\'' +
+                ", formatIndex=" + formatIndex +
+                ", url='" + url + '\'' +
+                ", manifestUrl='" + manifestUrl + '\'' +
+                ", tbr=" + tbr +
+                ", ext='" + ext + '\'' +
+                ", fps=" + fps +
+                ", protocol='" + protocol + '\'' +
+                ", preference=" + preference +
+                ", quality=" + quality +
+                ", hasDrm=" + hasDrm +
+                ", width=" + width +
+                ", height=" + height +
+                ", vcodec='" + vcodec + '\'' +
+                ", acodec='" + acodec + '\'' +
+                ", dynamicRange='" + dynamicRange + '\'' +
+                ", sourcePreference=" + sourcePreference +
+                ", formatNote='" + formatNote + '\'' +
+                ", resolution='" + resolution + '\'' +
+                ", aspectRatio=" + aspectRatio +
+                ", httpHeaders=" + httpHeaders +
+                ", videoExt='" + videoExt + '\'' +
+                ", audioExt='" + audioExt + '\'' +
+                ", abr=" + abr +
+                ", vbr=" + vbr +
+                ", format='" + format + '\'' +
+                '}';
     }
 }

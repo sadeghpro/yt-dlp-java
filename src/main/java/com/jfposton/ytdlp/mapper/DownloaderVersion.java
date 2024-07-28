@@ -1,23 +1,23 @@
-package com.jfposton.ytdlp.mapper.video;
+package com.jfposton.ytdlp.mapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Version {
+/**
+ * Version information
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DownloaderVersion {
     @JsonProperty("version")
     private String version;
-    @JsonProperty("current_git_head")
-    private Object currentGitHead;  // Assuming currentGitHead can be null, Object type can be adjusted
     @JsonProperty("release_git_head")
     private String releaseGitHead;
+
     @JsonProperty("repository")
     private String repository;
 
     public String getVersion() {
         return version;
-    }
-
-    public Object getCurrentGitHead() {
-        return currentGitHead;
     }
 
     public String getReleaseGitHead() {
@@ -30,9 +30,8 @@ public class Version {
 
     @Override
     public String toString() {
-        return "Version{" +
+        return "DownloaderVersion{" +
                 "version='" + version + '\'' +
-                ", currentGitHead=" + currentGitHead +
                 ", releaseGitHead='" + releaseGitHead + '\'' +
                 ", repository='" + repository + '\'' +
                 '}';

@@ -2,7 +2,6 @@ package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jfposton.ytdlp.mapper.video.Version;
 
 import java.util.List;
 
@@ -484,5 +483,93 @@ public class VideoInfo {
 
     public Version getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return "VideoInfo{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", formats=" + formats +
+                ", thumbnails=" + thumbnails +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", description='" + description + '\'' +
+                ", channelId='" + channelId + '\'' +
+                ", channelUrl='" + channelUrl + '\'' +
+                ", duration=" + duration +
+                ", viewCount=" + viewCount +
+                ", averageRating='" + averageRating + '\'' +
+                ", ageLimit=" + ageLimit +
+                ", webpageUrl='" + webpageUrl + '\'' +
+                ", categories=" + categories +
+                ", tags=" + tags +
+                ", playableInEmbed=" + playableInEmbed +
+                ", liveStatus='" + liveStatus + '\'' +
+                ", releaseTimestamp=" + releaseTimestamp +
+                ", formatSortFields=" + formatSortFields +
+                ", automaticCaptions=" + automaticCaptions +
+                ", subtitles=" + subtitles +
+                ", commentCount=" + commentCount +
+                ", chapters=" + chapters +
+                ", heatmap=" + heatmap +
+                ", likeCount=" + likeCount +
+                ", channel='" + channel + '\'' +
+                ", channelFollowerCount=" + channelFollowerCount +
+                ", channelIsVerified=" + channelIsVerified +
+                ", uploader='" + uploader + '\'' +
+                ", uploaderId='" + uploaderId + '\'' +
+                ", uploaderUrl='" + uploaderUrl + '\'' +
+                ", uploadDate='" + uploadDate + '\'' +
+                ", timestamp=" + timestamp +
+                ", availability='" + availability + '\'' +
+                ", originalUrl='" + originalUrl + '\'' +
+                ", webpageUrlBasename='" + webpageUrlBasename + '\'' +
+                ", webpageUrlDomain='" + webpageUrlDomain + '\'' +
+                ", extractor='" + extractor + '\'' +
+                ", extractorKey='" + extractorKey + '\'' +
+                ", playlist='" + playlist + '\'' +
+                ", playlistUploader='" + playlistUploader + '\'' +
+                ", playlistUploaderId='" + playlistUploaderId + '\'' +
+                ", playlistChannel='" + playlistChannel + '\'' +
+                ", playlistChannelId='" + playlistChannelId + '\'' +
+                ", playlistAutonumber=" + playlistAutonumber +
+                ", playlistIndex=" + playlistIndex +
+                ", displayId='" + displayId + '\'' +
+                ", fullTitle='" + fullTitle + '\'' +
+                ", durationString='" + durationString + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", releaseYear=" + releaseYear +
+                ", isLive=" + isLive +
+                ", wasLive=" + wasLive +
+                ", requestedSubtitles=" + requestedSubtitles +
+                ", hasDrm=" + hasDrm +
+                ", epoch=" + epoch +
+                ", requestedFormats=" + requestedFormats +
+                ", format='" + format + '\'' +
+                ", formatId='" + formatId + '\'' +
+                ", ext='" + ext + '\'' +
+                ", protocol='" + protocol + '\'' +
+                ", language='" + language + '\'' +
+                ", formatNote='" + formatNote + '\'' +
+                ", filesizeApprox=" + filesizeApprox +
+                ", tbr=" + tbr +
+                ", width=" + width +
+                ", height=" + height +
+                ", resolution='" + resolution + '\'' +
+                ", fps=" + fps +
+                ", dynamicRange='" + dynamicRange + '\'' +
+                ", vcodec='" + vcodec + '\'' +
+                ", vbr=" + vbr +
+                ", stretchedRatio=" + stretchedRatio +
+                ", aspectRatio=" + aspectRatio +
+                ", acodec='" + acodec + '\'' +
+                ", abr=" + abr +
+                ", asr=" + asr +
+                ", audioChannels=" + audioChannels +
+                ", filename='" + filename + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", type='" + type + '\'' +
+                ", version=" + version +
+                '}';
     }
 }
