@@ -87,6 +87,20 @@ public class VideoInfo {
     private String extractorKey;
     @JsonProperty("playlist")
     private String playlist;
+    @JsonProperty("playlist_uploader")
+    private String playlistUploader;
+
+    @JsonProperty("playlist_uploader_id")
+    private String playlistUploaderId;
+
+    @JsonProperty("playlist_channel")
+    private String playlistChannel;
+
+    @JsonProperty("playlist_channel_id")
+    private String playlistChannelId;
+
+    @JsonProperty("playlist_autonumber")
+    private int playlistAutonumber;
     @JsonProperty("playlist_index")
     private Object playlistIndex;  // Assuming playlistIndex can be null, Object type can be adjusted
     @JsonProperty("display_id")

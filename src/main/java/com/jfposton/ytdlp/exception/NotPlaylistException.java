@@ -1,30 +1,26 @@
-package com.jfposton.ytdlp;
+package com.jfposton.ytdlp.exception;
 
-/**
- * YtDlp Exception
- */
-public class YtDlpException extends Exception {
-
+public class NotPlaylistException extends Exception {
     /**
      * Exception message
      */
     private String message;
 
     /**
-     * Construct YtDlpException with a message
+     * Construct NoPlaylistException with a message
      *
      * @param message
      */
-    public YtDlpException(String message) {
+    public NotPlaylistException(String message) {
         this.message = message;
     }
 
     /**
-     * Construct YtDlpException from another exception
+     * Construct NoPlaylistException from another exception
      *
      * @param e Any exception
      */
-    public YtDlpException(Exception e) {
+    public NotPlaylistException(Exception e) {
         message = e.getMessage();
     }
 

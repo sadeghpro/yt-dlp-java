@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 
+import com.jfposton.ytdlp.exception.YtDlpException;
 import org.junit.Test;
 
 import com.jfposton.ytdlp.mapper.VideoInfo;

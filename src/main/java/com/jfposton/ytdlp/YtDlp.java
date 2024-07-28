@@ -1,9 +1,13 @@
 package com.jfposton.ytdlp;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jfposton.ytdlp.exception.YtDlpException;
+import com.jfposton.ytdlp.mapper.PlaylistPreviewInfo;
 import com.jfposton.ytdlp.mapper.VideoFormat;
 import com.jfposton.ytdlp.mapper.VideoInfo;
-import com.jfposton.ytdlp.mapper.VideoPreviewInfo;
 import com.jfposton.ytdlp.mapper.VideoThumbnail;
 import com.jfposton.ytdlp.utils.StreamGobbler;
 import com.jfposton.ytdlp.utils.StreamProcessExtractor;
@@ -13,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Provide an interface for yt-dlp executable
@@ -60,8 +65,7 @@ public class YtDlp {
      * @return response object
      * @throws YtDlpException
      */
-    public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback callback)
-            throws YtDlpException {
+    public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback callback) throws YtDlpException {
 
         String command = buildCommand(request.buildOptions());
         String directory = request.getDirectory();
@@ -90,8 +94,7 @@ public class YtDlp {
         InputStream outStream = process.getInputStream();
         InputStream errStream = process.getErrorStream();
 
-        StreamProcessExtractor stdOutProcessor =
-                new StreamProcessExtractor(outBuffer, outStream, callback);
+        StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, callback);
         StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
 
         try {
@@ -148,22 +151,59 @@ public class YtDlp {
         return videoInfo;
     }
 
-    public static VideoPreviewInfo getPlaylistPreviewInfo(String url) throws YtDlpException {
+    /**
+     * Returns Information regarding a playlist.
+     *
+     * @param url The Playlist url
+     * @return {@link PlaylistPreviewInfo}
+     * @throws YtDlpException If the
+     */
+    public static Optional<PlaylistPreviewInfo> getPlaylistPreviewInfo(String url) throws YtDlpException {
+
         YtDlpRequest request = new YtDlpRequest(url);
         request.setOption("dump-json");
         request.setOption("flat-playlist");
+        request.setOption("skip-download");
         YtDlpResponse response = YtDlp.execute(request);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        VideoPreviewInfo videoInfo;
+        PlaylistPreviewInfo videoInfo;
 
         try {
-            videoInfo = objectMapper.readValue(response.getOut(), VideoPreviewInfo.class);
+            String json = formatRawJson(response.getOut());
+            videoInfo = objectMapper.readValue(json, PlaylistPreviewInfo.class);
         } catch (IOException e) {
             throw new YtDlpException("Unable to parse video information: " + e.getMessage());
         }
 
-        return videoInfo;
+        return Optional.of(videoInfo);
+    }
+
+    /**
+     * Checks weather the URL is a playlist or not
+     *
+     * @param url Video Url
+     * @return true if the video url belongs to a playlist, false if the video is not a playlist or an invalid link
+     * @throws YtDlpException
+     */
+    public static boolean isPlaylist(String url) throws YtDlpException {
+        YtDlpRequest request = new YtDlpRequest(url);
+        request.setOption("dump-single-json");
+        request.setOption("flat-playlist");
+        request.setOption("skip-download");
+        YtDlpResponse response = YtDlp.execute(request);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode;
+
+        try {
+            jsonNode = objectMapper.readTree(response.getOut());
+        } catch (IOException e) {
+            throw new YtDlpException("Unable to parse video information: " + e.getMessage());
+        }
+
+        // Check if the JSON response contains playlist-specific fields
+        return jsonNode.has("entries");
     }
 
     /**
@@ -192,6 +232,22 @@ public class YtDlp {
         }
 
         return videoInfo;
+    }
+
+    private static String formatRawJson(String rawJson) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayNode videosArray = objectMapper.createArrayNode();
+
+        String[] jsonObjects = rawJson.split("\n");
+        for (String jsonObject : jsonObjects) {
+            JsonNode videoNode = objectMapper.readTree(jsonObject);
+            videosArray.add(videoNode);
+        }
+
+        ObjectNode result = objectMapper.createObjectNode();
+        result.set("videos", videosArray);
+
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
     }
 
     /**
