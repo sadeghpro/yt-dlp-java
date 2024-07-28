@@ -1,4 +1,4 @@
-package com.wonkglorg.ytdlp.mapper;
+package com.wonkglorg.ytdlp.mapper.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,19 +6,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PlaylistPreviewInfo extends PlaylistData {
+public class PlaylistInfo extends PlaylistData {
 
     @JsonProperty("entries")
-    private List<VideoEntry> entries;
+    private List<VideoInfo> entries;
 
-    public List<VideoEntry> getEntries() {
+
+    public List<VideoInfo> getEntries() {
         return entries;
+    }
+
+    public void setEntries(List<VideoInfo> entries) {
+        this.entries = entries;
     }
 
     @Override
     public String toString() {
-        return "PlaylistPreviewInfo{" +
-                "id='" + id + '\'' +
+        return "PlaylistInfo{" +
+                "entries=" + entries +
+                ", id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", availability='" + availability + '\'' +
                 ", channelFollowerCount=" + channelFollowerCount +
@@ -45,7 +51,6 @@ public class PlaylistPreviewInfo extends PlaylistData {
                 ", epoch=" + epoch +
                 ", filesToMove=" + filesToMove +
                 ", version=" + version +
-                ", entries=" + entries +
                 '}';
     }
 }

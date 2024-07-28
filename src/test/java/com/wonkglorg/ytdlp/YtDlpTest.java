@@ -1,7 +1,7 @@
 package com.wonkglorg.ytdlp;
 
 import com.wonkglorg.ytdlp.exception.YtDlpException;
-import com.wonkglorg.ytdlp.mapper.VideoInfo;
+import com.wonkglorg.ytdlp.mapper.json.VideoInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class YtDlpTest {
         long startTime = System.nanoTime();
 
         YtDlpRequest request = new YtDlpRequest();
-        request.setOption("version");
+        request.setOption("--version");
         YtDlpResponse response = YtDlp.execute(request);
 
         int elapsedTime = (int) (System.nanoTime() - startTime);
@@ -45,7 +45,7 @@ public class YtDlpTest {
 
         YtDlpRequest request = new YtDlpRequest();
         request.setUrl(VIDEO_URL);
-        request.setOption("simulate");
+        request.setOption("--simulate");
 
         YtDlpResponse response = YtDlp.execute(request);
 
@@ -56,7 +56,7 @@ public class YtDlpTest {
     public void testDirectory() throws YtDlpException {
 
         YtDlpRequest request = new YtDlpRequest(VIDEO_URL, DIRECTORY);
-        request.setOption("simulate");
+        request.setOption("--simulate");
 
         YtDlpResponse response = YtDlp.execute(request);
 
@@ -118,6 +118,17 @@ public class YtDlpTest {
     public void shouldNotBeValidPlaylist() throws YtDlpException {
         boolean isPlaylist = YtDlp.isPlaylist(VIDEO_URL);
         Assert.assertFalse(isPlaylist);
+    }
+
+    @Test
+    public void getYtdlpVersion() throws YtDlpException {
+        String version = YtDlp.getVersion();
+        Assert.assertNotNull(version);
+    }
+
+    @Test
+    public void getFormats() throws YtDlpException {
+        YtDlp.getFormats(VIDEO_URL);
     }
 
 

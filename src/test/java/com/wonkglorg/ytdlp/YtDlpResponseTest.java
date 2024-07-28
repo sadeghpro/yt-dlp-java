@@ -2,7 +2,7 @@ package com.wonkglorg.ytdlp;
 
 
 import com.wonkglorg.ytdlp.exception.YtDlpException;
-import com.wonkglorg.ytdlp.mapper.VideoInfo;
+import com.wonkglorg.ytdlp.mapper.json.VideoInfo;
 import org.junit.Test;
 
 import java.util.Optional;

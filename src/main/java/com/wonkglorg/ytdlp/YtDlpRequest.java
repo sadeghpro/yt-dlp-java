@@ -29,32 +29,37 @@ public class YtDlpRequest {
         return directory;
     }
 
-    public void setDirectory(String directory) {
+    public YtDlpRequest setDirectory(String directory) {
         this.directory = directory;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public YtDlpRequest setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public Map<String, String> getOption() {
         return options;
     }
 
-    public void setOption(String key) {
+    public YtDlpRequest setOption(String key) {
         options.put(key, null);
+        return this;
     }
 
-    public void setOption(String key, String value) {
+    public YtDlpRequest setOption(String key, String value) {
         options.put(key, value);
+        return this;
     }
 
-    public void setOption(String key, int value) {
+    public YtDlpRequest setOption(String key, int value) {
         options.put(key, String.valueOf(value));
+        return this;
     }
 
     /**
@@ -93,7 +98,7 @@ public class YtDlpRequest {
         StringBuilder builder = new StringBuilder();
 
         // Set Url
-        if (url != null) builder.append(url + " ");
+        if (url != null) builder.append("\"" + url + "\"" + " ");
 
         // Build options strings
         Iterator<Entry<String, String>> it = options.entrySet().iterator();
@@ -103,9 +108,14 @@ public class YtDlpRequest {
             String name = option.getKey();
             String value = option.getValue();
 
-            if (value == null) value = "";
+            if (value == null) {
+                String optionFormatted = String.format("%s", name).trim();
+                builder.append(optionFormatted).append(" ");
+                it.remove();
+                continue;
+            }
 
-            String optionFormatted = String.format("--%s %s", name, value).trim();
+            String optionFormatted = String.format("%s \"%s\"", name, value).trim();
             builder.append(optionFormatted).append(" ");
 
             it.remove();

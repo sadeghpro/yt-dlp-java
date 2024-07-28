@@ -3,19 +3,21 @@ package com.wonkglorg.ytdlp;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wonkglorg.ytdlp.exception.YtDlpException;
-import com.wonkglorg.ytdlp.mapper.PlaylistInfo;
-import com.wonkglorg.ytdlp.mapper.PlaylistPreviewInfo;
-import com.wonkglorg.ytdlp.mapper.VideoInfo;
+import com.wonkglorg.ytdlp.functional.TriFunction;
+import com.wonkglorg.ytdlp.mapper.Format;
+import com.wonkglorg.ytdlp.mapper.json.PlaylistInfo;
+import com.wonkglorg.ytdlp.mapper.json.PlaylistPreviewInfo;
+import com.wonkglorg.ytdlp.mapper.json.VideoInfo;
+import com.wonkglorg.ytdlp.mapper.json.VideoPreviewInfo;
 import com.wonkglorg.ytdlp.utils.StreamGobbler;
 import com.wonkglorg.ytdlp.utils.StreamProcessExtractor;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.BiFunction;
 
 /**
  * Provide an interface for yt-dlp executable
@@ -126,9 +128,283 @@ public class YtDlp {
      * @throws YtDlpException
      */
     public static String getVersion() throws YtDlpException {
-        YtDlpRequest request = new YtDlpRequest();
-        request.setOption("version");
+        YtDlpRequest request = new YtDlpRequest().setOption("--version");
         return YtDlp.execute(request).getOut();
+    }
+
+    private static Map<String, VideoInfo> download(String videoUrl, String fileName, String format, YtDlpRequest request) throws YtDlpException {
+        Optional<VideoInfo> videoInfoOptional = getVideoInfo(videoUrl);
+        if (videoInfoOptional.isEmpty()) {
+            throw new YtDlpException("Video not found");
+        }
+
+        VideoInfo videoInfo = videoInfoOptional.get();
+        String filePath = fileName == null ? videoInfo.getFileName() : fileName + "." + format;
+
+        try {
+            YtDlp.execute(request);
+        } catch (YtDlpException e) {
+            e.printStackTrace();
+
+        }
+
+        return Map.of(filePath, videoInfo);
+    }
+
+    /**
+     * Download a video from a URL
+     *
+     * @param videoUrl The video url
+     * @param path     The path to save the video
+     * @param fileName The name of the file
+     * @return A Map of the saved file and the video info related to it
+     * @throws YtDlpException If the video cannot be downloaded
+     */
+    public static Map<String, VideoInfo> downloadVideo(String videoUrl, String path, String fileName) throws YtDlpException {
+        return download(videoUrl, fileName, "mp4", new YtDlpRequest(videoUrl).setOption("--output", path + "\\" + fileName + ".mp4"));
+    }
+
+    /**
+     * Download a video from a URL
+     *
+     * @param videoUrl The video url
+     * @param path     The path to save the video
+     * @return A Map of the saved file and the video info related to it
+     * @throws YtDlpException If the video cannot be downloaded
+     */
+    public static Map<String, VideoInfo> downloadVideo(String videoUrl, String path) throws YtDlpException {
+        return downloadVideo(videoUrl, path, "%(title)s");
+    }
+
+    public static Map<String, VideoInfo> downloadAudio(String videoUrl, String path, String fileName) throws YtDlpException {
+        return download(videoUrl, fileName, "mp3", new YtDlpRequest(videoUrl).setOption("--extract-audio").setOption("--audio-format", "mp3").setOption("--output", path + "\\" + fileName + ".mp3"));
+    }
+
+    public static Map<String, VideoInfo> downloadAudio(String videoUrl, String path) throws YtDlpException {
+        return downloadAudio(videoUrl, path, "%(title)s");
+    }
+
+
+    /**
+     * Helper method to download videos with preview info
+     */
+    private static Map<String, VideoPreviewInfo> downloadPreview(String path, VideoPreviewInfo videoPreviewInfo, YtDlpRequest request) throws YtDlpException {
+        request.setOption("--output", path + "/%(title)s" + ".mp4");
+        request.setOption("--format", "bestvideo+bestaudio/best");
+        try {
+            YtDlp.execute(request);
+        } catch (YtDlpException e) {
+            e.printStackTrace();
+
+        }
+
+        return Map.of(path + "/" + videoPreviewInfo.getTitle() + ".mp4", videoPreviewInfo);
+    }
+
+    /**
+     * Download a video preview from a URL
+     *
+     * @param videoUrl         The video url
+     * @param path             The path to save the video
+     * @param videoPreviewInfo The video preview info
+     * @return A Map of the saved file and the video preview info related to it
+     * @throws YtDlpException
+     */
+    private static Map<String, VideoPreviewInfo> downloadVideoPreview(String videoUrl, String path, VideoPreviewInfo videoPreviewInfo) throws YtDlpException {
+        return downloadPreview(path, videoPreviewInfo, new YtDlpRequest(videoUrl).setOption("--output", path + "/%(title)s" + ".mp4").setOption("--format", "bestvideo+bestaudio/best"));
+    }
+
+    /**
+     * Download an audio preview from a URL
+     *
+     * @param videoUrl         The video url
+     * @param path             The path to save the audio
+     * @param videoPreviewInfo The video preview info
+     * @return A Map of the saved file and the video preview info related to it
+     * @throws YtDlpException If the audio cannot be downloaded
+     */
+    private static Map<String, VideoPreviewInfo> downloadAudioPreview(String videoUrl, String path, VideoPreviewInfo videoPreviewInfo) throws YtDlpException {
+        return downloadPreview(path, videoPreviewInfo, new YtDlpRequest(videoUrl).setOption("--extract-audio").setOption("--audio-format", "mp3").setOption("--output", path + "/%(title)s" + ".mp3"));
+    }
+
+
+    /**
+     * Helper method to download playlists with preview info
+     */
+    private static Map<String, VideoPreviewInfo> downloadPlaylistPreview(String playlistUrl, String path, boolean subDirectoryPlaylist, TriFunction<String, String, VideoPreviewInfo, Map<String, VideoPreviewInfo>> downloader) throws YtDlpException {
+        Optional<PlaylistPreviewInfo> playlistInfoOptional = getPlaylistPreviewInfo(playlistUrl);
+        if (playlistInfoOptional.isEmpty()) {
+            throw new YtDlpException("Playlist not found");
+        }
+
+        PlaylistPreviewInfo playlistInfo = playlistInfoOptional.get();
+        List<VideoPreviewInfo> videoInfos = playlistInfo.getEntries();
+
+        if (subDirectoryPlaylist) path = path + "/" + playlistInfo.getTitle();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<Map<String, VideoPreviewInfo>>> futures = new ArrayList<>();
+
+        for (VideoPreviewInfo videoInfo : videoInfos) {
+            String finalPath = path;
+            Callable<Map<String, VideoPreviewInfo>> task = () -> downloader.apply(videoInfo.getUrl(), finalPath, videoInfo);
+            Future<Map<String, VideoPreviewInfo>> future = executorService.submit(task);
+            futures.add(future);
+        }
+
+        Map<String, VideoPreviewInfo> downloadedVideos = new HashMap<>();
+        for (Future<Map<String, VideoPreviewInfo>> future : futures) {
+            try {
+                Map<String, VideoPreviewInfo> result = future.get();
+                downloadedVideos.putAll(result);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                    System.err.println("Executor service did not terminate");
+                }
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        return downloadedVideos;
+    }
+
+    /**
+     * Downloads videos from a playlist, with lower metadata information (Use {@link #downloadPlaylistVideo(String, String, boolean)} for full metadata information at the cost of slower speed
+     *
+     * @param playlistUrl          The playlist url
+     * @param path                 The path to save the videos
+     * @param subDirectoryPlaylist If true each playlist gets its own subdirectory with the name of the playlist as its name
+     * @return A Map of the saved files and the video info related to it
+     * @throws YtDlpException
+     */
+    public static Map<String, VideoPreviewInfo> downloadPlaylistVideoPreview(String playlistUrl, String path, boolean subDirectoryPlaylist) throws YtDlpException {
+        return downloadPlaylistPreview(playlistUrl, path, subDirectoryPlaylist, YtDlp::downloadVideoPreview);
+    }
+
+    /**
+     * Downloads audio from a playlist, with lower metadata information (Use {@link #downloadPlaylistAudio(String, String, boolean)} for full metadata information at the cost of slower speed
+     *
+     * @param playlistUrl          The playlist url
+     * @param path                 The path to save the videos
+     * @param subDirectoryPlaylist If true each playlist gets its own subdirectory with the name of the playlist as its name
+     * @return A Map of the saved files and the audio info related to it
+     * @throws YtDlpException
+     */
+    public static Map<String, VideoPreviewInfo> downloadPlaylistAudioPreview(String playlistUrl, String path, boolean subDirectoryPlaylist) throws YtDlpException {
+        return downloadPlaylistPreview(playlistUrl, path, subDirectoryPlaylist, YtDlp::downloadAudioPreview);
+    }
+
+    /**
+     * Downloads videos from a playlist, with full metadata information (Use {@link #dow} for less metadata information at faster speeds
+     *
+     * @param playlistUrl          The playlist url
+     * @param path                 The path to save the videos
+     * @param subDirectoryPlaylist If true each playlist gets its own subdirectory with the name of the playlist as its name
+     * @return A Map of the saved files and the video info related to it
+     * @throws YtDlpException
+     */
+    private static Map<String, VideoInfo> downloadPlaylist(String playlistUrl, String path, boolean subDirectoryPlaylist, BiFunction<String, String, Map<String, VideoInfo>> downloader) throws YtDlpException {
+        Optional<PlaylistInfo> playlistInfoOptional = getPlaylistInfo(playlistUrl);
+        if (playlistInfoOptional.isEmpty()) {
+            throw new YtDlpException("Playlist not found");
+        }
+
+        PlaylistInfo playlistInfo = playlistInfoOptional.get();
+        List<VideoInfo> videoInfos = playlistInfo.getEntries();
+
+        if (subDirectoryPlaylist) path = path + "/" + playlistInfo.getTitle();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<Map<String, VideoInfo>>> futures = new ArrayList<>();
+
+        System.out.println("Downloading " + videoInfos.size() + " videos");
+        for (VideoInfo videoInfo : videoInfos) {
+            String finalPath = path;
+            Callable<Map<String, VideoInfo>> task = () -> downloader.apply(videoInfo.getOriginalUrl(), finalPath, videoInfo);
+            Future<Map<String, VideoInfo>> future = executorService.submit(task);
+            futures.add(future);
+        }
+
+        Map<String, VideoInfo> downloadedVideos = new HashMap<>();
+        for (Future<Map<String, VideoInfo>> future : futures) {
+            try {
+                Map<String, VideoInfo> result = future.get();
+                downloadedVideos.putAll(result);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                    System.err.println("Executor service did not terminate");
+                }
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        return downloadedVideos;
+    }
+
+    public static Map<String, VideoInfo> downloadPlaylistVideo(String playlistUrl, String path, boolean subDirectoryPlaylist) throws YtDlpException {
+        return downloadPlaylist(playlistUrl, path, subDirectoryPlaylist, YtDlp::downloadVideo);
+    }
+
+    public static Map<String, VideoInfo> downloadPlaylistAudio(String playlistUrl, String path, boolean subDirectoryPlaylist) throws YtDlpException {
+        return downloadPlaylist(playlistUrl, path, subDirectoryPlaylist, YtDlp::downloadAudio);
+    }
+
+    /**
+     * Get available formats for a video
+     *
+     * @param url
+     */
+    public static List<Format> getFormats(String url) {
+        YtDlpRequest request = new YtDlpRequest(url);
+        request.setOption("--list-formats");
+        try {
+            YtDlpResponse response = YtDlp.execute(request);
+            System.out.println(response.getOut());
+            Format.parse(response.getOut()).forEach(System.out::println);
+        } catch (YtDlpException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Download a thumbnail from a video
+     *
+     * @param videoUrl The video url
+     * @param path     The path to save the thumbnail
+     * @return The path to the thumbnail
+     */
+    public static void downloadThumbnail(String videoUrl, String path) {
+        YtDlpRequest request = new YtDlpRequest(videoUrl);
+        request.setOption("--skip-download");
+        request.setOption("--write-thumbnail");
+        request.setOption("--output", path + "/%(title)s.%(ext)s");
+        try {
+            YtDlp.execute(request);
+        } catch (YtDlpException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -148,7 +424,7 @@ public class YtDlp {
         PlaylistInfo playlistPreviewInfo = optionalPlaylistPreviewInfo.get();
 
         YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-json");
+        request.setOption("--dump-json");
         YtDlpResponse response = YtDlp.execute(request);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -193,9 +469,9 @@ public class YtDlp {
      */
     public static Optional<PlaylistPreviewInfo> getPlaylistPreviewInfo(String url) throws YtDlpException {
         YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-single-json");
-        request.setOption("flat-playlist");
-        request.setOption("skip-download");
+        request.setOption("--dump-single-json");
+        request.setOption("--flat-playlist");
+        request.setOption("--skip-download");
         YtDlpResponse response = YtDlp.execute(request);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -211,17 +487,13 @@ public class YtDlp {
     }
 
     /**
-     * Returns limited Information regarding a playlist if more information is needed use {@link #getPlaylistInfo(String)} instead at the cost of time needed to obtain
-     *
-     * @param url The Playlist url
-     * @return {@link PlaylistPreviewInfo}
-     * @throws YtDlpException If the
+     * Setup method to get the base playlist information
      */
     private static Optional<PlaylistInfo> getPlaylistInfoSetup(String url) throws YtDlpException {
         YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-single-json");
-        request.setOption("flat-playlist");
-        request.setOption("skip-download");
+        request.setOption("--dump-single-json");
+        request.setOption("--flat-playlist");
+        request.setOption("--skip-download");
         YtDlpResponse response = YtDlp.execute(request);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -246,9 +518,9 @@ public class YtDlp {
     public static boolean isPlaylist(String url) throws YtDlpException {
         //works faster on playlists than individual videos duo to the data retrieved is there a flag to set that doesn't output as much info?
         YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-single-json");
-        request.setOption("flat-playlist");
-        request.setOption("skip-download");
+        request.setOption("--dump-single-json");
+        request.setOption("--flat-playlist");
+        request.setOption("--skip-download");
         YtDlpResponse response = YtDlp.execute(request);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -275,8 +547,8 @@ public class YtDlp {
 
         // Build request
         YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-json");
-        request.setOption("no-playlist");
+        request.setOption("--dump-json");
+        request.setOption("--no-playlist");
         YtDlpResponse response = YtDlp.execute(request);
 
         // Parse result

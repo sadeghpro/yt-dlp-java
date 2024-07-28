@@ -1,12 +1,15 @@
-package com.wonkglorg.ytdlp.mapper;
+package com.wonkglorg.ytdlp.mapper.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Shorter version of {@link VideoInfo} containing information retrieved from a flattened youtube playlist (Does not contain as many values but is alot faster to obtain)
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VideoEntry {
+public class VideoPreviewInfo {
 
     @JsonProperty("_type")
     private String type;

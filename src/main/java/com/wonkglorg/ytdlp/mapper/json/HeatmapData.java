@@ -1,4 +1,4 @@
-package com.wonkglorg.ytdlp.mapper;
+package com.wonkglorg.ytdlp.mapper.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
