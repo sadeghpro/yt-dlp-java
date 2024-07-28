@@ -16,7 +16,39 @@ Otherwise you will get this error :
 
 ## Installation
 
-Pending..
+### Maven
+
+```
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+```
+<dependency>
+    <groupId>com.github.Wonkglorg</groupId>
+    <artifactId>yt-dlp-java</artifactId>
+    <version>(Release Version)</version>
+</dependency>
+```
+
+
+### Gradle
+
+```
+dependencies {
+    implementation 'com.github.Wonkglorg:yt-dlp-java:Tag'
+}
+```
+
+```
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
 
 ## Make request
 
