@@ -10,7 +10,7 @@
 
     <name>Yt-Dlp wrapper</name>
     <description>Java wrapper for yt-dlp executable</description>
-    <url>https://github.com/jfposton/yt-dlp-java</url>
+    <url>https://github.com/wonkglorg/yt-dlp-java</url>
 
     <licenses>
         <license>
@@ -28,7 +28,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/jfposton/yt-dlp-java</url>
+            <url>https://maven.pkg.github.com/wonkglorg/yt-dlp-java</url>
         </repository>
     </distributionManagement>
 
