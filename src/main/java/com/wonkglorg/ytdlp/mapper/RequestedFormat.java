@@ -3,8 +3,6 @@ package com.wonkglorg.ytdlp.mapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.net.http.HttpHeaders;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestedFormat {
     @JsonProperty("format_id")
@@ -48,7 +46,7 @@ public class RequestedFormat {
     @JsonProperty("aspect_ratio")
     private Double aspectRatio;  // Assuming aspectRatio can be null
     @JsonProperty("http_headers")
-    private HttpHeaders httpHeaders;
+    private HttpHeader httpHeaders;
     @JsonProperty("video_ext")
     private String videoExt;
     @JsonProperty("audio_ext")
@@ -141,7 +139,7 @@ public class RequestedFormat {
         return aspectRatio;
     }
 
-    public HttpHeaders getHttpHeaders() {
+    public HttpHeader getHttpHeaders() {
         return httpHeaders;
     }
 

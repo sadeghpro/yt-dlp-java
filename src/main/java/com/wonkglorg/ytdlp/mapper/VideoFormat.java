@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
-import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VideoFormat {
@@ -58,7 +57,7 @@ public class VideoFormat {
     private Integer filesizeApprox;
 
     @JsonProperty("http_headers")
-    private Map<String, String> httpHeaders;
+    private HttpHeader httpHeaders;
 
     @JsonProperty("audio_ext")
     private String audioExt;
@@ -143,7 +142,7 @@ public class VideoFormat {
         return filesizeApprox;
     }
 
-    public Map<String, String> getHttpHeaders() {
+    public HttpHeader getHttpHeaders() {
         return httpHeaders;
     }
 

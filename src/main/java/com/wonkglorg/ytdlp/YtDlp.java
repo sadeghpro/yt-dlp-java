@@ -2,12 +2,10 @@ package com.wonkglorg.ytdlp;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wonkglorg.ytdlp.exception.YtDlpException;
 import com.wonkglorg.ytdlp.mapper.PlaylistInfo;
-import com.wonkglorg.ytdlp.mapper.VideoInfo;
 import com.wonkglorg.ytdlp.mapper.PlaylistPreviewInfo;
+import com.wonkglorg.ytdlp.mapper.VideoInfo;
 import com.wonkglorg.ytdlp.utils.StreamGobbler;
 import com.wonkglorg.ytdlp.utils.StreamProcessExtractor;
 
@@ -292,22 +290,6 @@ public class YtDlp {
         }
 
         return Optional.of(videoInfo);
-    }
-
-    private static String formatRawJson(String rawJson) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ArrayNode videosArray = objectMapper.createArrayNode();
-
-        String[] jsonObjects = rawJson.split("\n");
-        for (String jsonObject : jsonObjects) {
-            JsonNode videoNode = objectMapper.readTree(jsonObject);
-            videosArray.add(videoNode);
-        }
-
-        ObjectNode result = objectMapper.createObjectNode();
-        result.set("videos", videosArray);
-
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
     }
 
 

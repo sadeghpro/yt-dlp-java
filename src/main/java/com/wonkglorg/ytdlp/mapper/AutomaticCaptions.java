@@ -18,10 +18,15 @@ public class AutomaticCaptions {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Caption {
-
+        /**
+         * The Extension this Caption file is in
+         */
         @JsonProperty("ext")
         private String ext;
 
+        /**
+         * The url to download this Caption from
+         */
         @JsonProperty("url")
         private String url;
 
