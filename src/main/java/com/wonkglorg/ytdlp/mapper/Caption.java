@@ -18,6 +18,9 @@ public class Caption {
     @JsonProperty("url")
     private String url;
 
+    /**
+     * Full caption language name
+     */
     @JsonProperty("name")
     private String name;
 

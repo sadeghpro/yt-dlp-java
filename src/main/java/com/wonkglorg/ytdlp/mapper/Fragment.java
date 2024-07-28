@@ -2,21 +2,27 @@ package com.wonkglorg.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Represents the small preview image fragments of a video
+ */
 public class Fragment {
 
-
+    /**
+     * Link to an image of all fragmented image parts in 1
+     */
     @JsonProperty("url")
     private String url;
 
+    /**
+     * Duration of the fragment in seconds
+     */
     @JsonProperty("duration")
     private Double duration;
 
-    // Getters and Setters
 
     public String getUrl() {
         return url;
     }
-
 
     public Double getDuration() {
         return duration;

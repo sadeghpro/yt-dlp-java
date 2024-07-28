@@ -135,7 +135,7 @@ public class VideoPreviewInfo {
     private Integer releaseYear;
 
     @JsonProperty("_version")
-    private Version version;
+    private DownloaderVersion version;
 
     public String getType() {
         return type;
@@ -305,7 +305,7 @@ public class VideoPreviewInfo {
         return releaseYear;
     }
 
-    public Version getVersion() {
+    public DownloaderVersion getVersion() {
         return version;
     }
 

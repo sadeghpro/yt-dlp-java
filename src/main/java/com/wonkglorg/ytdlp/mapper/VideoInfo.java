@@ -176,7 +176,7 @@ public class VideoInfo {
     @JsonProperty("_type")
     private String type;
     @JsonProperty("_version")
-    private Version version;
+    private DownloaderVersion version;
 
 
     public String getId() {
@@ -483,7 +483,7 @@ public class VideoInfo {
         return type;
     }
 
-    public Version getVersion() {
+    public DownloaderVersion getVersion() {
         return version;
     }
 
