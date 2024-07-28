@@ -54,7 +54,7 @@ public class VideoFormat {
     private Double aspectRatio;
 
     @JsonProperty("filesize_approx")
-    private Integer filesizeApprox;
+    private Long filesizeApprox;
 
     @JsonProperty("http_headers")
     private HttpHeader httpHeaders;
@@ -138,7 +138,7 @@ public class VideoFormat {
         return aspectRatio;
     }
 
-    public Integer getFilesizeApprox() {
+    public Long getFilesizeApprox() {
         return filesizeApprox;
     }
 

@@ -26,9 +26,9 @@ public class VideoInfo {
     @JsonProperty("channel_url")
     private String channelUrl;
     @JsonProperty("duration")
-    private int duration;
+    private Long duration;
     @JsonProperty("view_count")
-    private long viewCount;
+    private Long viewCount;
     @JsonProperty("average_rating")
     private String averageRating;
     @JsonProperty("age_limit")
@@ -40,11 +40,11 @@ public class VideoInfo {
     @JsonProperty("tags")
     private List<String> tags;
     @JsonProperty("playable_in_embed")
-    private boolean playableInEmbed;
+    private Boolean playableInEmbed;
     @JsonProperty("live_status")
     private String liveStatus;
     @JsonProperty("release_timestamp")
-    private long releaseTimestamp;
+    private Long releaseTimestamp;
     @JsonProperty("_format_sort_fields")
     private List<String> formatSortFields;
     @JsonProperty("automatic_captions")
@@ -52,17 +52,17 @@ public class VideoInfo {
     @JsonProperty("subtitles")
     private Map<String, List<Subtitle>> subtitles;
     @JsonProperty("comment_count")
-    private long commentCount;
+    private Long commentCount;
     @JsonProperty("chapters")
     private Object chapters;  // Assuming chapters can be null, Object type can be adjusted
     @JsonProperty("heatmap")
     private List<HeatmapData> heatmap;
     @JsonProperty("like_count")
-    private long likeCount;
+    private Long likeCount;
     @JsonProperty("channel")
     private String channel;
     @JsonProperty("channel_follower_count")
-    private long channelFollowerCount;
+    private Long channelFollowerCount;
     @JsonProperty("channel_is_verified")
     private boolean channelIsVerified;
     @JsonProperty("uploader")
@@ -74,7 +74,7 @@ public class VideoInfo {
     @JsonProperty("upload_date")
     private String uploadDate;
     @JsonProperty("timestamp")
-    private long timestamp;
+    private Long timestamp;
     @JsonProperty("availability")
     private String availability;
     @JsonProperty("original_url")
@@ -114,17 +114,17 @@ public class VideoInfo {
     @JsonProperty("release_date")
     private String releaseDate;
     @JsonProperty("release_year")
-    private int releaseYear;
+    private Integer releaseYear;
     @JsonProperty("is_live")
-    private boolean isLive;
+    private Boolean isLive;
     @JsonProperty("was_live")
-    private boolean wasLive;
+    private Boolean wasLive;
     @JsonProperty("requested_subtitles")
     private Object requestedSubtitles;  // Assuming requestedSubtitles can be null, Object type can be adjusted
     @JsonProperty("_has_drm")
     private Object hasDrm;  // Assuming hasDrm can be null, Object type can be adjusted
     @JsonProperty("epoch")
-    private long epoch;
+    private Long epoch;
     @JsonProperty("requested_formats")
     private List<RequestedFormat> requestedFormats;
     @JsonProperty("format")
@@ -140,17 +140,17 @@ public class VideoInfo {
     @JsonProperty("format_note")
     private String formatNote;
     @JsonProperty("filesize_approx")
-    private long filesizeApprox;
+    private Long filesizeApprox;
     @JsonProperty("tbr")
-    private double tbr;
+    private Double tbr;
     @JsonProperty("width")
-    private int width;
+    private Integer width;
     @JsonProperty("height")
-    private int height;
+    private Integer height;
     @JsonProperty("resolution")
     private String resolution;
     @JsonProperty("fps")
-    private double fps;
+    private Double fps;
     @JsonProperty("dynamic_range")
     private String dynamicRange;
     @JsonProperty("vcodec")
@@ -211,7 +211,7 @@ public class VideoInfo {
         return channelUrl;
     }
 
-    public int getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
