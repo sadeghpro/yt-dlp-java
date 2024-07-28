@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -47,9 +48,9 @@ public class VideoInfo {
     @JsonProperty("_format_sort_fields")
     private List<String> formatSortFields;
     @JsonProperty("automatic_captions")
-    private AutomaticCaptions automaticCaptions;
+    private Map<String, List<Caption>> automaticCaptions;
     @JsonProperty("subtitles")
-    private Subtitles subtitles;
+    private Map<String, List<Subtitle>> subtitles;
     @JsonProperty("comment_count")
     private long commentCount;
     @JsonProperty("chapters")
@@ -254,11 +255,11 @@ public class VideoInfo {
         return formatSortFields;
     }
 
-    public AutomaticCaptions getAutomaticCaptions() {
+    public Map<String, List<Caption>> getAutomaticCaptions() {
         return automaticCaptions;
     }
 
-    public Subtitles getSubtitles() {
+    public Map<String, List<Subtitle>> getSubtitles() {
         return subtitles;
     }
 
