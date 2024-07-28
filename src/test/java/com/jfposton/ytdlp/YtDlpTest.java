@@ -3,7 +3,6 @@ package com.jfposton.ytdlp;
 import com.jfposton.ytdlp.exception.YtDlpException;
 import com.jfposton.ytdlp.mapper.VideoFormat;
 import com.jfposton.ytdlp.mapper.VideoInfo;
-import com.jfposton.ytdlp.mapper.VideoThumbnail;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -80,7 +79,7 @@ public class YtDlpTest {
 
     @Test
     public void testGetThumbnails() throws YtDlpException {
-        List<VideoThumbnail> thumbnails = YtDlp.getThumbnails(VIDEO_URL);
+        List<Thumb> thumbnails = YtDlp.getThumbnails(VIDEO_URL);
         Assert.assertNotNull(thumbnails);
         Assert.assertTrue(thumbnails.size() > 0);
     }

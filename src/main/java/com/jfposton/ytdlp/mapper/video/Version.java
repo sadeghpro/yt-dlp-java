@@ -1,4 +1,4 @@
-package com.jfposton.ytdlp.mapper;
+package com.jfposton.ytdlp.mapper.video;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,31 +16,25 @@ public class Version {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     public Object getCurrentGitHead() {
         return currentGitHead;
-    }
-
-    public void setCurrentGitHead(Object currentGitHead) {
-        this.currentGitHead = currentGitHead;
     }
 
     public String getReleaseGitHead() {
         return releaseGitHead;
     }
 
-    public void setReleaseGitHead(String releaseGitHead) {
-        this.releaseGitHead = releaseGitHead;
-    }
-
     public String getRepository() {
         return repository;
     }
 
-    public void setRepository(String repository) {
-        this.repository = repository;
+    @Override
+    public String toString() {
+        return "Version{" +
+                "version='" + version + '\'' +
+                ", currentGitHead=" + currentGitHead +
+                ", releaseGitHead='" + releaseGitHead + '\'' +
+                ", repository='" + repository + '\'' +
+                '}';
     }
 }

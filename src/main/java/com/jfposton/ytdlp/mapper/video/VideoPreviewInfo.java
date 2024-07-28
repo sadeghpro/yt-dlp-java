@@ -1,7 +1,8 @@
-package com.jfposton.ytdlp.mapper;
+package com.jfposton.ytdlp.mapper.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jfposton.ytdlp.mapper.Thumbnail;
 
 import java.util.List;
 
@@ -307,5 +308,54 @@ public class VideoPreviewInfo {
 
     public Version getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return "VideoPreviewInfo{" +
+                "type='" + type + '\'' +
+                ", ieKey='" + ieKey + '\'' +
+                ", id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", duration=" + duration +
+                ", channelId='" + channelId + '\'' +
+                ", channel='" + channel + '\'' +
+                ", channelUrl='" + channelUrl + '\'' +
+                ", uploader='" + uploader + '\'' +
+                ", uploaderId='" + uploaderId + '\'' +
+                ", uploaderUrl='" + uploaderUrl + '\'' +
+                ", thumbnails=" + thumbnails +
+                ", timestamp=" + timestamp +
+                ", releaseTimestamp=" + releaseTimestamp +
+                ", availability='" + availability + '\'' +
+                ", viewCount=" + viewCount +
+                ", liveStatus='" + liveStatus + '\'' +
+                ", channelIsVerified=" + channelIsVerified +
+                ", xForwardedForIp='" + xForwardedForIp + '\'' +
+                ", webpageUrl='" + webpageUrl + '\'' +
+                ", originalUrl='" + originalUrl + '\'' +
+                ", webpageUrlBasename='" + webpageUrlBasename + '\'' +
+                ", webpageUrlDomain='" + webpageUrlDomain + '\'' +
+                ", extractor='" + extractor + '\'' +
+                ", extractorKey='" + extractorKey + '\'' +
+                ", playlistCount=" + playlistCount +
+                ", playlist='" + playlist + '\'' +
+                ", playlistId='" + playlistId + '\'' +
+                ", playlistTitle='" + playlistTitle + '\'' +
+                ", playlistUploader='" + playlistUploader + '\'' +
+                ", playlistUploaderId='" + playlistUploaderId + '\'' +
+                ", playlistChannel='" + playlistChannel + '\'' +
+                ", playlistChannelId='" + playlistChannelId + '\'' +
+                ", playlistAutonumber=" + playlistAutonumber +
+                ", nEntries=" + nEntries +
+                ", playlistIndex=" + playlistIndex +
+                ", lastPlaylistIndex=" + lastPlaylistIndex +
+                ", epoch=" + epoch +
+                ", durationString='" + durationString + '\'' +
+                ", releaseYear=" + releaseYear +
+                ", version=" + version +
+                '}';
     }
 }

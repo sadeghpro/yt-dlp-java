@@ -2,14 +2,13 @@ package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jfposton.ytdlp.mapper.video.Fragment;
+
+import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VideoFormat {
-
-    private int asr;
-    private int tbr;
-    private int abr;
-    private String format;
 
     @JsonProperty("format_id")
     private String formatId;
@@ -17,133 +16,66 @@ public class VideoFormat {
     @JsonProperty("format_note")
     private String formatNote;
 
+    @JsonProperty("ext")
     private String ext;
-    private int preference;
-    private String vcodec;
+
+    @JsonProperty("protocol")
+    private String protocol;
+
+    @JsonProperty("acodec")
     private String acodec;
-    private int width;
-    private int height;
-    private long filesize;
-    private int fps;
+
+    @JsonProperty("vcodec")
+    private String vcodec;
+
+    @JsonProperty("url")
     private String url;
 
-    public int getAsr() {
-        return asr;
-    }
+    @JsonProperty("width")
+    private Integer width;
 
-    public void setAsr(int asr) {
-        this.asr = asr;
-    }
+    @JsonProperty("height")
+    private Integer height;
 
-    public int getTbr() {
-        return tbr;
-    }
+    @JsonProperty("fps")
+    private Double fps;
 
-    public void setTbr(int tbr) {
-        this.tbr = tbr;
-    }
+    @JsonProperty("rows")
+    private Integer rows;
 
-    public int getAbr() {
-        return abr;
-    }
+    @JsonProperty("columns")
+    private Integer columns;
 
-    public void setAbr(int abr) {
-        this.abr = abr;
-    }
+    @JsonProperty("fragments")
+    private List<Fragment> fragments;
 
-    public String getFormat() {
-        return format;
-    }
+    @JsonProperty("resolution")
+    private String resolution;
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+    @JsonProperty("aspect_ratio")
+    private Double aspectRatio;
 
-    public String getFormatId() {
-        return formatId;
-    }
+    @JsonProperty("filesize_approx")
+    private Integer filesizeApprox;
 
-    public void setFormatId(String formatId) {
-        this.formatId = formatId;
-    }
+    @JsonProperty("http_headers")
+    private Map<String, String> httpHeaders;
 
-    public String getFormatNote() {
-        return formatNote;
-    }
+    @JsonProperty("audio_ext")
+    private String audioExt;
 
-    public void setFormatNote(String formatNote) {
-        this.formatNote = formatNote;
-    }
+    @JsonProperty("video_ext")
+    private String videoExt;
 
-    public String getExt() {
-        return ext;
-    }
+    @JsonProperty("vbr")
+    private Integer vbr;
 
-    public void setExt(String ext) {
-        this.ext = ext;
-    }
+    @JsonProperty("abr")
+    private Integer abr;
 
-    public int getPreference() {
-        return preference;
-    }
+    @JsonProperty("tbr")
+    private Integer tbr;
 
-    public void setPreference(int preference) {
-        this.preference = preference;
-    }
-
-    public String getVcodec() {
-        return vcodec;
-    }
-
-    public void setVcodec(String vcodec) {
-        this.vcodec = vcodec;
-    }
-
-    public String getAcodec() {
-        return acodec;
-    }
-
-    public void setAcodec(String acodec) {
-        this.acodec = acodec;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public long getFilesize() {
-        return filesize;
-    }
-
-    public void setFilesize(long filesize) {
-        this.filesize = filesize;
-    }
-
-    public int getFps() {
-        return fps;
-    }
-
-    public void setFps(int fps) {
-        this.fps = fps;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    @JsonProperty("format")
+    private String format;
 }

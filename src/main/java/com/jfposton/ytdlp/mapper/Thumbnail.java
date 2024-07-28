@@ -1,7 +1,9 @@
 package com.jfposton.ytdlp.mapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Thumbnail {
     @JsonProperty("url")
     private String url;
@@ -12,5 +14,25 @@ public class Thumbnail {
     @JsonProperty("width")
     private int width;
 
-    // Getters and Setters
+    public String getUrl() {
+        return url;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public String toString() {
+        return "Thumbnail{" +
+                "url='" + url + '\'' +
+                ", height=" + height +
+                ", width=" + width +
+                '}';
+    }
+
 }

@@ -5,16 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jfposton.ytdlp.exception.YtDlpException;
-import com.jfposton.ytdlp.mapper.PlaylistPreviewInfo;
-import com.jfposton.ytdlp.mapper.VideoFormat;
+import com.jfposton.ytdlp.mapper.PlaylistInfo;
 import com.jfposton.ytdlp.mapper.VideoInfo;
-import com.jfposton.ytdlp.mapper.VideoThumbnail;
+import com.jfposton.ytdlp.mapper.video.PlaylistPreviewInfo;
 import com.jfposton.ytdlp.utils.StreamGobbler;
 import com.jfposton.ytdlp.utils.StreamProcessExtractor;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -133,35 +133,69 @@ public class YtDlp {
         return YtDlp.execute(request).getOut();
     }
 
-    public static VideoInfo getPlaylistInfo(String url) throws YtDlpException {
+    /**
+     * Returns the full Information regarding all videos in a playlist as seen in {@link #getVideoInfo(String)}
+     *
+     * @param url
+     * @return
+     * @throws YtDlpException
+     */
+    public static Optional<PlaylistInfo> getPlaylistInfo(String url) throws YtDlpException {
+        Optional<PlaylistInfo> optionalPlaylistPreviewInfo = getPlaylistInfoSetup(url);
+
+        if (optionalPlaylistPreviewInfo.isEmpty()) {
+            return Optional.empty();
+        }
+
+        PlaylistInfo playlistPreviewInfo = optionalPlaylistPreviewInfo.get();
+
         YtDlpRequest request = new YtDlpRequest(url);
         request.setOption("dump-json");
-        request.setOption("flat-playlist");
         YtDlpResponse response = YtDlp.execute(request);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        VideoInfo videoInfo;
+        List<VideoInfo> videoInfos = new ArrayList<>();
+        String responseOutput = response.getOut();
+
+        //splits them by their outer brackets, because the format is not valid json but each video entry is a seperate json all in 1 response.
+        String[] jsonObjects = responseOutput.split("}\\s*\\{");
+
+        if (jsonObjects.length < 1) return Optional.empty();
+
+        for (int i = 0; i < jsonObjects.length; i++) {
+            if (i == 0) {
+                jsonObjects[i] = jsonObjects[i] + "}";
+            } else if (i == jsonObjects.length - 1) {
+                jsonObjects[i] = "{" + jsonObjects[i] + "}";
+            } else {
+                jsonObjects[i] = "{" + jsonObjects[i];
+            }
+        }
 
         try {
-            videoInfo = objectMapper.readValue(response.getOut(), VideoInfo.class);
+            for (String jsonObject : jsonObjects) {
+                VideoInfo videoInfo = objectMapper.readValue(jsonObject + "}", VideoInfo.class);
+                videoInfos.add(videoInfo);
+            }
         } catch (IOException e) {
             throw new YtDlpException("Unable to parse video information: " + e.getMessage());
         }
 
-        return videoInfo;
+        playlistPreviewInfo.setEntries(videoInfos);
+
+        return Optional.of(playlistPreviewInfo);
     }
 
     /**
-     * Returns Information regarding a playlist.
+     * Returns limited Information regarding a playlist if more information is needed use {@link #getPlaylistInfo(String)} instead at the cost of time needed to obtain
      *
      * @param url The Playlist url
      * @return {@link PlaylistPreviewInfo}
      * @throws YtDlpException If the
      */
     public static Optional<PlaylistPreviewInfo> getPlaylistPreviewInfo(String url) throws YtDlpException {
-
         YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-json");
+        request.setOption("dump-single-json");
         request.setOption("flat-playlist");
         request.setOption("skip-download");
         YtDlpResponse response = YtDlp.execute(request);
@@ -170,8 +204,7 @@ public class YtDlp {
         PlaylistPreviewInfo videoInfo;
 
         try {
-            String json = formatRawJson(response.getOut());
-            videoInfo = objectMapper.readValue(json, PlaylistPreviewInfo.class);
+            videoInfo = objectMapper.readValue(response.getOut(), PlaylistPreviewInfo.class);
         } catch (IOException e) {
             throw new YtDlpException("Unable to parse video information: " + e.getMessage());
         }
@@ -180,13 +213,40 @@ public class YtDlp {
     }
 
     /**
-     * Checks weather the URL is a playlist or not
+     * Returns limited Information regarding a playlist if more information is needed use {@link #getPlaylistInfo(String)} instead at the cost of time needed to obtain
+     *
+     * @param url The Playlist url
+     * @return {@link PlaylistPreviewInfo}
+     * @throws YtDlpException If the
+     */
+    private static Optional<PlaylistInfo> getPlaylistInfoSetup(String url) throws YtDlpException {
+        YtDlpRequest request = new YtDlpRequest(url);
+        request.setOption("dump-single-json");
+        request.setOption("flat-playlist");
+        request.setOption("skip-download");
+        YtDlpResponse response = YtDlp.execute(request);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PlaylistInfo videoInfo;
+
+        try {
+            videoInfo = objectMapper.readValue(response.getOut(), PlaylistInfo.class);
+        } catch (IOException e) {
+            throw new YtDlpException("Unable to parse video information: " + e.getMessage());
+        }
+
+        return Optional.of(videoInfo);
+    }
+
+    /**
+     * Checks weather the URL is a playlist or not (do not call too often, takes a few seconds on average to calculate)
      *
      * @param url Video Url
      * @return true if the video url belongs to a playlist, false if the video is not a playlist or an invalid link
      * @throws YtDlpException
      */
     public static boolean isPlaylist(String url) throws YtDlpException {
+        //works faster on playlists than individual videos duo to the data retrieved is there a flag to set that doesn't output as much info?
         YtDlpRequest request = new YtDlpRequest(url);
         request.setOption("dump-single-json");
         request.setOption("flat-playlist");
@@ -207,13 +267,13 @@ public class YtDlp {
     }
 
     /**
-     * Retrieve all information available on a video
+     * Retrieve all information available on a video (if the link refers to a playlist get information about the first video in the list)
      *
      * @param url Video url
      * @return Video info
      * @throws YtDlpException
      */
-    public static VideoInfo getVideoInfo(String url) throws YtDlpException {
+    public static Optional<VideoInfo> getVideoInfo(String url) throws YtDlpException {
 
         // Build request
         YtDlpRequest request = new YtDlpRequest(url);
@@ -231,7 +291,7 @@ public class YtDlp {
             throw new YtDlpException("Unable to parse video information: " + e.getMessage());
         }
 
-        return videoInfo;
+        return Optional.of(videoInfo);
     }
 
     private static String formatRawJson(String rawJson) throws IOException {
@@ -250,53 +310,6 @@ public class YtDlp {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
     }
 
-    /**
-     * List formats
-     *
-     * @param url Video url
-     * @return list of formats
-     * @throws YtDlpException
-     */
-    public static List<VideoFormat> getFormats(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getFormats();
-    }
-
-    /**
-     * List thumbnails
-     *
-     * @param url Video url
-     * @return list of thumbnail
-     * @throws YtDlpException
-     */
-    public static List<VideoThumbnail> getThumbnails(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getThumbnails();
-    }
-
-    /**
-     * List categories
-     *
-     * @param url Video url
-     * @return list of category
-     * @throws YtDlpException
-     */
-    public static List<String> getCategories(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getCategories();
-    }
-
-    /**
-     * List tags
-     *
-     * @param url Video url
-     * @return list of tag
-     * @throws YtDlpException
-     */
-    public static List<String> getTags(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getTags();
-    }
 
     /**
      * Get command executable or path to the executable

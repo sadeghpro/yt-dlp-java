@@ -2,6 +2,7 @@ package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jfposton.ytdlp.mapper.video.Version;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class VideoInfo {
     @JsonProperty("formats")
     private List<VideoFormat> formats;
     @JsonProperty("thumbnails")
-    private List<VideoThumbnail> thumbnails;
+    private List<Thumbnail> thumbnails;
     @JsonProperty("thumbnail")
     private String thumbnail;
     @JsonProperty("description")
@@ -189,7 +190,7 @@ public class VideoInfo {
         return formats;
     }
 
-    public List<VideoThumbnail> getThumbnails() {
+    public List<Thumbnail> getThumbnails() {
         return thumbnails;
     }
 
