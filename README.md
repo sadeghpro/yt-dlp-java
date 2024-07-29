@@ -75,13 +75,12 @@ String stdOut = response.getOut(); // Executable output
 You may also specify a callback to get notified about the progress of the download:
 
 ```
-...
 YtDlpResponse response = YtDlp.execute(request, new DownloadProgressCallback() {
-          @Override
-          public void onProgressUpdate(float progress, long etaInSeconds) {
-              System.out.println(String.valueOf(progress) + "%");
-          }
-      });
+    @Override
+        public void onProgressUpdate(float progress, long etaInSeconds) {
+            System.out.println(String.valueOf(progress) + "%");
+        }
+});
 ```
 # Links
 * [yt-dlp documentation](https://github.com/yt-dlp/yt-dlp)
