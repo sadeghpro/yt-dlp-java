@@ -84,7 +84,7 @@ YtDlpResponse response = YtDlp.execute(request, new DownloadProgressCallback() {
 ```
 
 ## Java Objects
-Provides Typesafe representations of yt-dlp data callbacks to more securely access and see what data is available when using a predefined helper methods including video and playlist data etc.
+Provides Typesafe representations of yt-dlp data callbacks to more securely access and see what data is available when using a predefined helper methods including video and playlist data.
 
 ```java
 //Request
