@@ -87,12 +87,12 @@ YtDlpResponse response = YtDlp.execute(request, new DownloadProgressCallback() {
 Provides Typesafe representations of yt-dlp data callbacks to more securely access and see what data is available when using a predefined helper methods including video and playlist data.
 
 ```java
-//Request
+// Request
 Optional<VideoInfo> videoInfo = YtDlp.getVideoInfo("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 
-//Accesing the optional if a valid url was given
+// Accesing the optional if a valid url was given
 videoInfo.ifPresent(info -> {
-   //accessing data typesafe
+   // Accessing data typesafe
    String channelID = info.getChannelId();
    String videoDescription = info.getDescription();
    Map<String, List<Caption>> videoCaptions = info.getAutomaticCaptions();
