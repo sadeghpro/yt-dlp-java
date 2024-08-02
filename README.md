@@ -74,7 +74,7 @@ String stdOut = response.getOut(); // Executable output
 
 You may also specify a callback to get notified about the progress of the download:
 
-```
+```java
 YtDlpResponse response = YtDlp.execute(request, new DownloadProgressCallback() {
     @Override
         public void onProgressUpdate(float progress, long etaInSeconds) {
@@ -82,5 +82,23 @@ YtDlpResponse response = YtDlp.execute(request, new DownloadProgressCallback() {
         }
 });
 ```
+
+## Java Objects
+Provides Typesafe representations of yt-dlp data callbacks to more securely access and see what data is available when using a predefined helper methods including video and playlist data etc.
+
+```java
+//Request
+Optional<VideoInfo> videoInfo = YtDlp.getVideoInfo("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+
+//Accesing the optional if a valid url was given
+videoInfo.ifPresent(info -> {
+   //accessing data typesafe
+   String channelID = info.getChannelId();
+   String videoDescription = info.getDescription();
+   Map<String, List<Caption>> videoCaptions = info.getAutomaticCaptions();
+  }
+);
+```
+
 # Links
 * [yt-dlp documentation](https://github.com/yt-dlp/yt-dlp)
