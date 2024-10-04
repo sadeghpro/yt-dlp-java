@@ -103,7 +103,7 @@ public class YtDlpRequest {
         StringBuilder builder = new StringBuilder();
 
         // Set Url
-        if (url != null) builder.append("\"" + url + "\"" + " ");
+        if (url != null) builder.append(url + " ");
 
         // Build options strings
         Iterator<Entry<String, String>> it = options.entrySet().iterator();
