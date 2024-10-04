@@ -61,7 +61,7 @@ String directory = System.getProperty("user.home");
 
 // Build request
 YtDlpRequest request = new YtDlpRequest(videoUrl, directory);
-request.setOption("output", "%(id)s");	// --output "%(id)s"
+request.setOption("-o", "%(id)s");	// --output "%(id)s"
 
 // Make request and return response
 YtDlpResponse response = YtDlp.execute(request);

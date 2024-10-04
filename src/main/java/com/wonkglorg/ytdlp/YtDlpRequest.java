@@ -120,7 +120,7 @@ public class YtDlpRequest {
                 continue;
             }
 
-            String optionFormatted = String.format("%s \"%s\"", name, value).trim();
+            String optionFormatted = String.format("%s %s", name, value).trim();
             builder.append(optionFormatted).append(" ");
 
             it.remove();
