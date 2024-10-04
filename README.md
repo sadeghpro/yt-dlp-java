@@ -29,9 +29,9 @@ Otherwise you will get this error :
 
 ```
 <dependency>
-    <groupId>com.github.Wonkglorg</groupId>
+    <groupId>com.github.sadeghpro</groupId>
     <artifactId>yt-dlp-java</artifactId>
-    <version>(Release Version)</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -40,7 +40,7 @@ Otherwise you will get this error :
 
 ```
 dependencies {
-    implementation 'com.github.Wonkglorg:yt-dlp-java:Tag'
+    implementation 'com.github.sadeghpro:yt-dlp-java:1.0.0'
 }
 ```
 
@@ -61,9 +61,7 @@ String directory = System.getProperty("user.home");
 
 // Build request
 YtDlpRequest request = new YtDlpRequest(videoUrl, directory);
-request.setOption("ignore-errors");		// --ignore-errors
 request.setOption("output", "%(id)s");	// --output "%(id)s"
-request.setOption("retries", 10);		// --retries 10
 
 // Make request and return response
 YtDlpResponse response = YtDlp.execute(request);
